@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  wallet-test-quik-tech:
+    image: wallet-test-quik-tech
+    environment:
+      ENDPOINT_URL: /api/v1/wallets
+      API_PORT: 8081
+
+    ports:
+      - "9001:8081"
+      
+    networks:
+      - test-quik-tech
+      
+networks: 
+  test-quik-tech: 
+    external: true
+    name: test-quik-tech 
