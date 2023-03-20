@@ -4,12 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
+
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
 type CreditRequest struct {
-	Amount      float64 `json:"amount"`
-	Description string  `json:"description"`
+	Amount      decimal.Decimal `json:"amount"`
+	Description string          `json:"description"`
 }
 
 func (h *Handler) Credit(c *gin.Context) {
@@ -42,6 +44,6 @@ func (h *Handler) Credit(c *gin.Context) {
 		WalletID: c.Param("wallet_id"),
 		Amount:   req.Amount,
 		Type:     req.Description,
-		Balance:  balance,
+		Balance:  *balance,
 	})
 }

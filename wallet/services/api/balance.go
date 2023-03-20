@@ -5,9 +5,10 @@ import (
 	"fmt"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
+	"github.com/shopspring/decimal"
 )
 
-func (s *service) Balance(walletID string) (float64, error) {
+func (s *service) Balance(walletID string) (*decimal.Decimal, error) {
 	var player models.Player
 
 	u, ok := s.cache.GetKeyBytes(walletID)
@@ -21,8 +22,8 @@ func (s *service) Balance(walletID string) (float64, error) {
 
 	err := json.Unmarshal(u, &player)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return player.Balance, nil
+	return &player.Balance, nil
 }

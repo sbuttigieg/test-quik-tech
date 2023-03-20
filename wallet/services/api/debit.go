@@ -6,11 +6,12 @@ import (
 	"fmt"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
+	"github.com/shopspring/decimal"
 )
 
-func (s *service) Debit(walletID string, amount float64) (float64, error) {
-	if amount < 0 {
-		return 0, errors.New("negative value")
+func (s *service) Debit(walletID string, amount decimal.Decimal) (*decimal.Decimal, error) {
+	if amount.LessThan(decimal.Zero) {
+		return nil, errors.New("negative value")
 	}
 
 	var player models.Player
@@ -27,13 +28,13 @@ func (s *service) Debit(walletID string, amount float64) (float64, error) {
 	if ok {
 		err := json.Unmarshal(u, &player)
 		if err != nil {
-			return 0, err
+			return nil, err
 		}
 	}
 
-	res := player.Balance - amount
-	if res < 0 {
-		return 0, errors.New("insufficient funds")
+	res := player.Balance.Sub(amount)
+	if res.LessThan(decimal.Zero) {
+		return nil, errors.New("insufficient funds")
 	}
 
 	player.Balance = res
@@ -41,9 +42,9 @@ func (s *service) Debit(walletID string, amount float64) (float64, error) {
 	// Replace with store update (balance, last activity) that also includes cache update
 	err := s.cache.SetKey(walletID, player, s.config.CacheExpiry)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	// *********************
 
-	return player.Balance, nil
+	return &player.Balance, nil
 }

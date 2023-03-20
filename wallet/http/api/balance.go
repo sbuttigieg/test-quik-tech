@@ -24,6 +24,6 @@ func (h *Handler) Balance(c *gin.Context) {
 
 	c.JSON(http.StatusOK, models.Balance{
 		WalletID: c.Param("wallet_id"),
-		Balance:  balance,
+		Balance:  *balance,
 	})
 }
