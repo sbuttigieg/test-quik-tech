@@ -143,9 +143,9 @@ func main() {
 
 	// Endpoints
 	apiRouter.POST(fmt.Sprintf("%s/:wallet_id/auth", endpointURL), apiHandlers.Auth)
-	apiRouter.GET(fmt.Sprintf("%s/:wallet_id/balance", endpointURL), middleware.BasicAuth(), apiHandlers.Balance)
-	apiRouter.POST(fmt.Sprintf("%s/:wallet_id/credit", endpointURL), middleware.BasicAuth(), apiHandlers.Credit)
-	apiRouter.POST(fmt.Sprintf("%s/:wallet_id/debit", endpointURL), middleware.BasicAuth(), apiHandlers.Debit)
+	apiRouter.GET(fmt.Sprintf("%s/:wallet_id/balance", endpointURL), middleware.BasicAuth(apiService), apiHandlers.Balance)
+	apiRouter.POST(fmt.Sprintf("%s/:wallet_id/credit", endpointURL), middleware.BasicAuth(apiService), apiHandlers.Credit)
+	apiRouter.POST(fmt.Sprintf("%s/:wallet_id/debit", endpointURL), middleware.BasicAuth(apiService), apiHandlers.Debit)
 
 	// Start the server
 	err = apiRouter.Run(fmt.Sprintf(":%s", apiAddr))
