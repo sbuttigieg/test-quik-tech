@@ -1,6 +1,6 @@
 package api
 
-import "github.com/sbuttigieg/test-quik-tech/internal/services/api"
+import "github.com/sbuttigieg/test-quik-tech/wallet/services/api"
 
 func New(serv api.Service) *Handler {
 	return &Handler{

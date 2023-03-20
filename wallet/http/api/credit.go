@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sbuttigieg/test-quik-tech/internal/models"
+	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
 type CreditRequest struct {
@@ -18,23 +18,30 @@ func (h *Handler) Credit(c *gin.Context) {
 	if err := c.BindJSON(&req); err != nil {
 		c.Abort()
 		c.JSON(http.StatusBadRequest, "Error reading request")
+
 		return
 	}
 
-	if req.Amount < 0 {
+	balance, err := h.service.Credit(c.Param("wallet_id"), req.Amount)
+	if err != nil {
 		c.Abort()
-		c.JSON(http.StatusBadRequest, "Negative value error")
+
+		switch err.Error() {
+		case "user not found":
+			c.JSON(http.StatusBadRequest, "User does not exist")
+		case "negative value":
+			c.JSON(http.StatusBadRequest, "Negative value error")
+		default:
+			c.JSON(http.StatusInternalServerError, "Error processing credit transaction")
+		}
+
 		return
 	}
-
-	// **** To get balance from cache ****
-	// **** To add credit amount to balance ****
-	// **** To update new balance in store and cache ****
 
 	c.JSON(http.StatusOK, models.Transaction{
 		WalletID: c.Param("wallet_id"),
 		Amount:   req.Amount,
 		Type:     req.Description,
-		Balance:  100,
+		Balance:  balance,
 	})
 }

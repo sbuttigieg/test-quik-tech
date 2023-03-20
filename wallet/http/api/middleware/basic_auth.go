@@ -4,12 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sbuttigieg/test-quik-tech/internal/models"
+	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
 func BasicAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		// **** To be replaced by users from DB or cache ****
 		User1 := models.User{
 			WalletID: "6cc4ee0d-9919-4857-a70d-9b7283957e16",
@@ -49,6 +48,7 @@ func BasicAuth() gin.HandlerFunc {
 		if !hasAuth || user != username || pwd != password {
 			c.Abort()
 			c.JSON(http.StatusUnauthorized, "Authentication Error")
+
 			return
 		}
 	}

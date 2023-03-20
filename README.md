@@ -35,7 +35,7 @@
     "password': "456789"
 }
 ```
-- Before balance, credit and debit endpoints are allowed, the user shall be verified by the auth endpoint. Once verified, the user will be marked as logged in in cache. If user is inactive for more than 1 minute, he will be logged out and auth will need to be repeated.
+- Before balance, credit and debit endpoints are allowed, the user shall be verified by the auth endpoint. Once verified, the user will be marked as logged in. If user is inactive for more than 5 minutes, he will be logged out and auth will need to be repeated.
 - The username and password are used as Basic Auth for all endpoints except auth.
 - When a balance request is received, it is retrieved from cache. If it is not found in cache, then it will be retrieved from the store.
 - When a debit request is received, if successful the balance of the player will be deducted by the debit amount. The balance is updated in both the store and cache.
