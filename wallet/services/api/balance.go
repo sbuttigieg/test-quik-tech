@@ -8,21 +8,21 @@ import (
 )
 
 func (s *service) Balance(walletID string) (float64, error) {
-	var user models.User
+	var player models.Player
 
 	u, ok := s.cache.GetKeyBytes(walletID)
 	if !ok {
 		fmt.Println("service balance", ok)
 		// get from store
-		// if not found => error "user not found"
+		// if not found => error "player not found"
 		// if found store to cache
 		// return store balance, nil
 	}
 
-	err := json.Unmarshal(u, &user)
+	err := json.Unmarshal(u, &player)
 	if err != nil {
 		return 0, err
 	}
 
-	return user.Balance, nil
+	return player.Balance, nil
 }

@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type User struct {
+type Player struct {
 	WalletID     string
 	Balance      float64
 	Username     string

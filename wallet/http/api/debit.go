@@ -27,8 +27,8 @@ func (h *Handler) Debit(c *gin.Context) {
 		c.Abort()
 
 		switch err.Error() {
-		case "user not found":
-			c.JSON(http.StatusBadRequest, "User does not exist")
+		case "player not found":
+			c.JSON(http.StatusBadRequest, "Player does not exist")
 		case "negative value":
 			c.JSON(http.StatusBadRequest, "Negative value error")
 		case "insufficient funds":

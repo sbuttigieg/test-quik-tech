@@ -13,32 +13,32 @@ func (s *service) Credit(walletID string, amount float64) (float64, error) {
 		return 0, errors.New("negative value")
 	}
 
-	var user models.User
+	var player models.Player
 
 	u, ok := s.cache.GetKeyBytes(walletID)
 	if !ok {
 		fmt.Println("service credit", ok)
 		// get from store
-		// if not found => error "user not found"
+		// if not found => error "player not found"
 		// if found store to cache
-		// set user to store user
+		// set player to store player
 	}
 
 	if ok {
-		err := json.Unmarshal(u, &user)
+		err := json.Unmarshal(u, &player)
 		if err != nil {
 			return 0, err
 		}
 	}
 
-	user.Balance += amount
+	player.Balance += amount
 
 	// Replace with store update (balance, last activity) that also includes cache update
-	err := s.cache.SetKey(walletID, user, s.config.CacheExpiry)
+	err := s.cache.SetKey(walletID, player, s.config.CacheExpiry)
 	if err != nil {
 		return 0, err
 	}
 	// *********************
 
-	return user.Balance, nil
+	return player.Balance, nil
 }

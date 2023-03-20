@@ -8,34 +8,34 @@ import (
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
-func (s *service) Auth(walletID, username, password string) (*models.User, error) {
+func (s *service) Auth(walletID, username, password string) (*models.Player, error) {
 	if username == "" || password == "" {
 		return nil, errors.New("missing credentials")
 	}
 
-	var user models.User
+	var player models.Player
 
 	u, ok := s.cache.GetKeyBytes(walletID)
 	if !ok {
 		fmt.Println("service Auth", ok)
 		// get from store
-		// if not found => error "user not found"
+		// if not found => error "player not found"
 		// if found store to cache
-		// set user to store user
+		// set player to store player
 	}
 
 	if ok {
-		err := json.Unmarshal(u, &user)
+		err := json.Unmarshal(u, &player)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if user.Username != username || user.Password != password {
+	if player.Username != username || player.Password != password {
 		return nil, errors.New("incorrect credentials")
 	}
 
 	// update last activity
 
-	return &user, nil
+	return &player, nil
 }

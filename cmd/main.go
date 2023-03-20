@@ -44,7 +44,7 @@ func main() {
 		log.Fatal(ctx, err.Error())
 	}
 
-	User1 := models.User{
+	Player1 := models.Player{
 		WalletID:     "6cc4ee0d-9919-4857-a70d-9b7283957e16",
 		Balance:      100,
 		Username:     "Bob",
@@ -52,7 +52,7 @@ func main() {
 		LastActivity: time.Now(),
 	}
 
-	User2 := models.User{
+	Player2 := models.Player{
 		WalletID:     "0924f01f-3f70-4fe4-ac82-dce4b30e2a7f",
 		Balance:      100,
 		Username:     "Joe",
@@ -60,7 +60,7 @@ func main() {
 		LastActivity: time.Now(),
 	}
 
-	User3 := models.User{
+	Player3 := models.Player{
 		WalletID:     "d2ba410a-9bc4-476b-86af-c55525b527df",
 		Balance:      100,
 		Username:     "Dave",
@@ -68,37 +68,37 @@ func main() {
 		LastActivity: time.Now(),
 	}
 
-	err = cache.SetKey(User1.WalletID, User1, c.CacheExpiry)
+	err = cache.SetKey(Player1.WalletID, Player1, c.CacheExpiry)
 	if err != nil {
 		fmt.Println("SetKey", err)
 	}
 
-	err = cache.SetKey(User2.WalletID, User2, c.CacheExpiry)
+	err = cache.SetKey(Player2.WalletID, Player2, c.CacheExpiry)
 	if err != nil {
 		fmt.Println("SetKey", err)
 	}
 
-	err = cache.SetKey(User3.WalletID, User3, c.CacheExpiry)
+	err = cache.SetKey(Player3.WalletID, Player3, c.CacheExpiry)
 	if err != nil {
 		fmt.Println("SetKey", err)
 	}
 
-	u1, ok := cache.GetKeyBytes(User1.WalletID)
+	u1, ok := cache.GetKeyBytes(Player1.WalletID)
 	if !ok {
-		fmt.Println("GetKey User1", ok)
+		fmt.Println("GetKey Player1", ok)
 	}
 
-	u2, ok := cache.GetKeyBytes(User2.WalletID)
+	u2, ok := cache.GetKeyBytes(Player2.WalletID)
 	if !ok {
-		fmt.Println("GetKey User1", ok)
+		fmt.Println("GetKey Player1", ok)
 	}
 
-	u3, ok := cache.GetKeyBytes(User3.WalletID)
+	u3, ok := cache.GetKeyBytes(Player3.WalletID)
 	if !ok {
-		fmt.Println("GetKey User1", ok)
+		fmt.Println("GetKey Player1", ok)
 	}
 
-	var d1, d2, d3 models.User
+	var d1, d2, d3 models.Player
 
 	err = json.Unmarshal(u1, &d1)
 	if err != nil {
@@ -115,9 +115,9 @@ func main() {
 		fmt.Println("Unmarshal d3", err)
 	}
 
-	fmt.Println("User1 ==>", d1)
-	fmt.Println("User2 ==>", d2)
-	fmt.Println("User3 ==>", d3)
+	fmt.Println("Player1 ==>", d1)
+	fmt.Println("Player2 ==>", d2)
+	fmt.Println("Player3 ==>", d3)
 
 	// api setup
 	apiService, err := api.NewService(c, cache, uuid.New, time.Now)

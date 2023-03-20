@@ -35,36 +35,80 @@
     "password': "456789"
 }
 ```
-- Before balance, credit and debit endpoints are allowed, the user shall be verified by the auth endpoint. Once verified, the user will be marked as logged in. If user is inactive for more than 5 minutes, he will be logged out and auth will need to be repeated.
+- Before balance, credit and debit endpoints are allowed, the player shall be verified by the auth endpoint. Once verified, the player will be marked as logged in. If player is inactive for more than 5 minutes, he will be logged out and auth will need to be repeated.
 - The username and password are used as Basic Auth for all endpoints except auth.
 - When a balance request is received, it is retrieved from cache. If it is not found in cache, then it will be retrieved from the store.
 - When a debit request is received, if successful the balance of the player will be deducted by the debit amount. The balance is updated in both the store and cache.
-- When a credit request is received, if successful the balance of the player will be increased by the debit amount. The balance is updated in both the store and cache.
+- When a credit request is received, if successful the balance of the player will be increased by the credit amount. The balance is updated in both the store and cache.
 
 
 
 ## Endpoints
 
-POST `/api/v1/wallets/:wallet_id/auth`  ==> to authenticate user and log him in
+POST `/api/v1/wallets/:wallet_id/auth`  ==> to authenticate player and log him in
 
 requires body in the following format:
 ```
 {
-    "username": "some user",
+    "username": "some username",
     "password': "some password"
 }
 ```
 
-returns 
+returns response in the following format if successful:
+```
+{
+    "wallet_id": "some walletID",
+    "balance": a number
+}
+```
 
-POST `/api/v1/wallets/:wallet_id/` ==> to register a new user
+GET `/api/v1/wallets/:wallet_id/balance` ==> to get player balance
+
+returns response in the following format if successful:
+```
+{
+    "wallet_id": "some walletID",
+    "balance": a number
+}
+```
+
+POST `/api/v1/wallets/:wallet_id/credit` ==> to add funds to player balance
 
 requires body in the following format:
 ```
 {
-    "username": "some user",
-    "password': "some password"
+    "amount": "some amount",
+    "description': "some string"
 }
 ```
 
-GET `/api/v1/wallets/balance` ==> to get user balance
+returns response in the following format if successful:
+```
+{
+    "wallet_id": "some walletID",
+    "amount": some amount,
+    "transaction_type": "some string",
+    "balance": some amount
+}
+```
+
+POST `/api/v1/wallets/:wallet_id/debit` ==> to deduct funds from player balance
+
+requires body in the following format:
+```
+{
+    "amount": "some amount",
+    "description': "some string"
+}
+```
+
+returns response in the following format if successful:
+```
+{
+    "wallet_id": "some walletID",
+    "amount": some amount,
+    "transaction_type": "some string",
+    "balance": some amount
+}
+```
