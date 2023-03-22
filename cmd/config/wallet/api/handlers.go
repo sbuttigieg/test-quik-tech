@@ -5,6 +5,6 @@ import (
 	service "github.com/sbuttigieg/test-quik-tech/wallet/services/api"
 )
 
-func NewHandlers(service service.Service) (*api.Handler, error) {
-	return api.New(service), nil
+func NewHandlers(service service.Service) *api.Handler {
+	return api.New(service)
 }

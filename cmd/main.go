@@ -33,6 +33,16 @@ func main() {
 		log.Fatal(ctx, err.Error())
 	}
 
+	// logger setup
+	logFile := "logs.txt"
+	f, err := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	defer f.Close()
+
+	log := config.NewLogger(c, f)
+
 	// connections
 	redisConnection, err := connections.NewRedis()
 	if err != nil {
@@ -40,10 +50,7 @@ func main() {
 	}
 
 	// redis setup
-	cache, err := store.NewCache(c, redisConnection)
-	if err != nil {
-		log.Fatal(ctx, err.Error())
-	}
+	cache := store.NewCache(c, redisConnection)
 
 	Player1 := models.Player{
 		WalletID:     "6cc4ee0d-9919-4857-a70d-9b7283957e16",
@@ -121,21 +128,16 @@ func main() {
 	fmt.Println("Player3 ==>", d3)
 
 	// api setup
-	apiService, err := api.NewService(c, cache, uuid.New, time.Now)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	apiHandlers, err := api.NewHandlers(apiService)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	apiService := api.NewService(c, cache, log, uuid.New, time.Now)
+	apiHandlers := api.NewHandlers(apiService)
 
 	// Comment for debug mode. Uncomment for production
 	// gin.SetMode(gin.ReleaseMode)
 
 	// Create a new instance of the Gin router
 	apiRouter := gin.New()
+	apiRouter.Use(gin.Recovery())
+	apiRouter.Use(middleware.Logger(ctx, log))
 
 	err = apiRouter.SetTrustedProxies(nil)
 	if err != nil {

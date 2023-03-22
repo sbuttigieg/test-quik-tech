@@ -2,6 +2,8 @@ package wallet
 
 import (
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Config struct {
@@ -9,4 +11,5 @@ type Config struct {
 	Version       string
 	CacheExpiry   time.Duration
 	SessionExpiry time.Duration
+	LogLevel      logrus.Level
 }

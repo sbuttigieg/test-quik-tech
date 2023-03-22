@@ -7,7 +7,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/google/uuid v1.3.0
 	github.com/shopspring/decimal v1.3.1
-	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
+	github.com/sirupsen/logrus v1.9.0
 )
 
 require (

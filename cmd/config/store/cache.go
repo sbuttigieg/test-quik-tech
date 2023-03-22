@@ -9,6 +9,6 @@ import (
 )
 
 // NewInmem create new in memory store
-func NewCache(cfg *wallet.Config, redis redis.UniversalClient) (store.Cache, error) {
-	return cache.New(cfg, redis), nil
+func NewCache(cfg *wallet.Config, redis redis.UniversalClient) store.Cache {
+	return cache.New(cfg, redis)
 }

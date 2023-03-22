@@ -8,6 +8,7 @@ import (
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 	"github.com/sbuttigieg/test-quik-tech/wallet/store"
 	"github.com/shopspring/decimal"
+	"github.com/sirupsen/logrus"
 )
 
 //go:generate moq -out ./mocks/service.go -pkg mocks  . Service
@@ -18,10 +19,11 @@ type Service interface {
 	Debit(string, decimal.Decimal) (*decimal.Decimal, error)
 }
 
-func New(config *wallet.Config, cache store.Cache, uuidFunc func() uuid.UUID, timeFunc func() time.Time) Service {
+func New(config *wallet.Config, cache store.Cache, logger *logrus.Logger, uuidFunc func() uuid.UUID, timeFunc func() time.Time) Service {
 	return &service{
 		config:   config,
 		cache:    cache,
+		logger:   logger,
 		uuidFunc: uuidFunc,
 		timeFunc: timeFunc,
 	}
@@ -30,6 +32,7 @@ func New(config *wallet.Config, cache store.Cache, uuidFunc func() uuid.UUID, ti
 type service struct {
 	config   *wallet.Config
 	cache    store.Cache
+	logger   *logrus.Logger
 	uuidFunc func() uuid.UUID
 	timeFunc func() time.Time
 }

@@ -11,6 +11,7 @@ services:
     environment:
       ENV: local
       VERSION: 1.0.0
+      LOG_LEVEL: debug # panic / fatal / error / warning / info / debug / trace
       
       ENDPOINT_URL: /api/v1/wallets
       API_PORT: 8081
