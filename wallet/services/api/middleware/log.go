@@ -27,9 +27,9 @@ func NewLoggingMiddleware(next api.Service, logger *logrus.Logger) api.Service {
 	return &m
 }
 
-func (m *loggingMiddleware) Auth(walletID, username, password string) (*models.Player, error) {
+func (m *loggingMiddleware) Auth(walletID, username, password string, login bool) (*models.Player, error) {
 	start := time.Now()
-	player, err := m.next.Auth(walletID, username, password)
+	player, err := m.next.Auth(walletID, username, password, login)
 	end := time.Now()
 
 	logMsg := models.LogService{
@@ -41,7 +41,7 @@ func (m *loggingMiddleware) Auth(walletID, username, password string) (*models.P
 
 	switch err {
 	case nil:
-		logMsg.Data = fmt.Sprintf("wallet_id: %v", player.WalletID)
+		logMsg.Data = fmt.Sprintf("wallet_id: %v, login: %v", player.WalletID, login)
 	default:
 		logMsg.Data = fmt.Sprintf("error: %v", err.Error())
 
@@ -76,9 +76,9 @@ func (m *loggingMiddleware) Balance(walletID string) (*decimal.Decimal, error) {
 	return balance, err
 }
 
-func (m *loggingMiddleware) Credit(walletID string, amount decimal.Decimal) (*decimal.Decimal, error) {
+func (m *loggingMiddleware) Credit(walletID string, description string, amount decimal.Decimal) (*models.Transaction, error) {
 	start := time.Now()
-	balance, err := m.next.Credit(walletID, amount)
+	transaction, err := m.next.Credit(walletID, description, amount)
 	end := time.Now()
 
 	logMsg := models.LogService{
@@ -90,19 +90,19 @@ func (m *loggingMiddleware) Credit(walletID string, amount decimal.Decimal) (*de
 
 	switch err {
 	case nil:
-		logMsg.Data = fmt.Sprintf("wallet_id: %v, amount:, %v, balance: %v", walletID, amount, balance)
+		logMsg.Data = fmt.Sprintf("wallet_id: %v, description: %v, amount:, %v, transaction: %v", walletID, description, amount, transaction)
 	default:
 		logMsg.Data = fmt.Sprintf("error: %v", err.Error())
 	}
 
 	m.log.Debug(logMsg)
 
-	return balance, err
+	return transaction, err
 }
 
-func (m *loggingMiddleware) Debit(walletID string, amount decimal.Decimal) (*decimal.Decimal, error) {
+func (m *loggingMiddleware) Debit(walletID string, description string, amount decimal.Decimal) (*models.Transaction, error) {
 	start := time.Now()
-	balance, err := m.next.Debit(walletID, amount)
+	transaction, err := m.next.Debit(walletID, description, amount)
 	end := time.Now()
 
 	logMsg := models.LogService{
@@ -114,12 +114,12 @@ func (m *loggingMiddleware) Debit(walletID string, amount decimal.Decimal) (*dec
 
 	switch err {
 	case nil:
-		logMsg.Data = fmt.Sprintf("wallet_id: %v, amount:, %v, balance: %v", walletID, amount, balance)
+		logMsg.Data = fmt.Sprintf("wallet_id: %v, amount:, %v, transaction: %v", walletID, amount, transaction)
 	default:
 		logMsg.Data = fmt.Sprintf("error: %v", err.Error())
 	}
 
 	m.log.Debug(logMsg)
 
-	return balance, err
+	return transaction, err
 }

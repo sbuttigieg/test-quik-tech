@@ -5,8 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
-
-	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
 type CreditRequest struct {
@@ -24,7 +22,7 @@ func (h *Handler) Credit(c *gin.Context) {
 		return
 	}
 
-	balance, err := h.service.Credit(c.Param("wallet_id"), req.Amount)
+	transaction, err := h.service.Credit(c.Param("wallet_id"), req.Description, req.Amount)
 	if err != nil {
 		c.Abort()
 
@@ -33,6 +31,8 @@ func (h *Handler) Credit(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, "Player does not exist")
 		case "negative value":
 			c.JSON(http.StatusBadRequest, "Negative value error")
+		case "player not logged in":
+			c.JSON(http.StatusBadRequest, "Player not logged in")
 		default:
 			c.JSON(http.StatusInternalServerError, "Error processing credit transaction")
 		}
@@ -40,10 +40,5 @@ func (h *Handler) Credit(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, models.Transaction{
-		WalletID: c.Param("wallet_id"),
-		Amount:   req.Amount,
-		Type:     req.Description,
-		Balance:  *balance,
-	})
+	c.JSON(http.StatusOK, transaction)
 }

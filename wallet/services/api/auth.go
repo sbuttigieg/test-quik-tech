@@ -3,29 +3,34 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
-func (s *service) Auth(walletID, username, password string) (*models.Player, error) {
+func (s *service) Auth(walletID, username, password string, login bool) (*models.Player, error) {
 	if username == "" || password == "" {
 		return nil, errors.New("missing credentials")
 	}
 
-	var player models.Player
+	var player *models.Player
+	var err error
 
-	u, ok := s.cache.GetKeyBytes(walletID)
+	p, ok := s.cache.GetKeyBytes(walletID)
 	if !ok {
-		fmt.Println("service Auth", ok)
-		// get from store
-		// if not found => error "player not found"
-		// if found store to cache
-		// set player to store player
+		player, err = s.store.GetPlayer(walletID)
+		if err != nil {
+			return nil, errors.New("player not found")
+		}
+
+		// Can be done as store middleware
+		err = s.cache.SetKey(walletID, player, s.config.CacheExpiry)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if ok {
-		err := json.Unmarshal(u, &player)
+		err := json.Unmarshal(p, &player)
 		if err != nil {
 			return nil, err
 		}
@@ -35,7 +40,19 @@ func (s *service) Auth(walletID, username, password string) (*models.Player, err
 		return nil, errors.New("incorrect credentials")
 	}
 
-	// update last activity
+	// Update last activity when auth func is called for login
+	if login {
+		player, err = s.store.ActivePlayer(walletID)
+		if err != nil {
+			return nil, err
+		}
 
-	return &player, nil
+		// Can be done as store middleware
+		err = s.cache.SetKey(walletID, player, s.config.CacheExpiry)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return player, nil
 }

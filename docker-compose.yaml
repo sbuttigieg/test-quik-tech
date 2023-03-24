@@ -6,8 +6,31 @@ services:
     networks:
       - test-quik-tech
 
+  db:
+    container_name: "wallet_db"
+    platform: linux/x86_64
+    image: mysql:latest
+    networks:
+      - test-quik-tech
+    restart: always
+    ports: 
+      - 3306:3306
+    environment: 
+      MYSQL_RANDOM_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "walletdb"
+      MYSQL_USER: "tester"
+      MYSQL_PASSWORD: "secret"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
   wallet-test-quik-tech:
     image: wallet-test-quik-tech
+    restart: on-failure
+    depends_on:
+      - db
+    links:
+      - db
     environment:
       ENV: local
       VERSION: 1.0.0
@@ -16,11 +39,17 @@ services:
       ENDPOINT_URL: /api/v1/wallets
       API_PORT: 8081
 
+      MYSQL_DATABASE: "walletdb"
+      MYSQL_USER: "tester"
+      MYSQL_PASSWORD: "secret"
+      MYSQL_PORT: 3306
+      MYSQL_TIMEOUT_SEC: 30
+
       REDIS_HOST: inmem
       REDIS_PORT: 6379
-      REDIS_EXPIRY_SEC: 10
+      REDIS_EXPIRY_SEC: 300
 
-      SESSION_EXPIRY_SEC: 10
+      SESSION_EXPIRY_SEC: 300
 
     ports:
       - "9001:8081"
@@ -32,3 +61,6 @@ networks:
   test-quik-tech: 
     external: true
     name: test-quik-tech 
+
+volumes:
+  mysql_data:

@@ -1,6 +1,10 @@
 FROM golang:1.19-alpine as builder
 
-RUN apk update && apk add --no-cache git ca-certificates tzdata 
+RUN apk update && \
+    apk add --no-cache git ca-certificates tzdata && \
+    apk add libc-dev && \
+    apk add gcc && \
+    apk add make
 
 COPY ./bin/test-quik-tech /
 

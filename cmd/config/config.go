@@ -29,11 +29,17 @@ func NewConfig() (*wallet.Config, error) {
 		return nil, err
 	}
 
+	storeTimeout, err := strconv.Atoi(os.Getenv("MYSQL_TIMEOUT_SEC"))
+	if err != nil {
+		return nil, err
+	}
+
 	c := &wallet.Config{
 		Env:           env,
 		Version:       version,
 		CacheExpiry:   time.Duration(cacheExpiry) * time.Second,
 		SessionExpiry: time.Duration(sessionExpiry) * time.Second,
+		StoreTimeout:  time.Duration(storeTimeout) * time.Second,
 		LogLevel:      logLevel,
 	}
 

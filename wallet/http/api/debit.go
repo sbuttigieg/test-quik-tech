@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 	"github.com/shopspring/decimal"
 )
 
@@ -23,7 +22,7 @@ func (h *Handler) Debit(c *gin.Context) {
 		return
 	}
 
-	balance, err := h.service.Debit(c.Param("wallet_id"), req.Amount)
+	transaction, err := h.service.Debit(c.Param("wallet_id"), req.Description, req.Amount)
 	if err != nil {
 		c.Abort()
 
@@ -34,6 +33,8 @@ func (h *Handler) Debit(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, "Negative value error")
 		case "insufficient funds":
 			c.JSON(http.StatusBadRequest, "Insufficient  Funds")
+		case "player not logged in":
+			c.JSON(http.StatusBadRequest, "Player not logged in")
 		default:
 			c.JSON(http.StatusInternalServerError, "Error processing debit transaction")
 		}
@@ -41,10 +42,5 @@ func (h *Handler) Debit(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, models.Transaction{
-		WalletID: c.Param("wallet_id"),
-		Amount:   req.Amount,
-		Type:     req.Description,
-		Balance:  *balance,
-	})
+	c.JSON(http.StatusOK, transaction)
 }

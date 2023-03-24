@@ -15,6 +15,8 @@ func (h *Handler) Balance(c *gin.Context) {
 		switch err.Error() {
 		case "player not found":
 			c.JSON(http.StatusBadRequest, "Player does not exist")
+		case "player not logged in":
+			c.JSON(http.StatusBadRequest, "Player not logged in")
 		default:
 			c.JSON(http.StatusInternalServerError, "Error retrieving balance")
 		}

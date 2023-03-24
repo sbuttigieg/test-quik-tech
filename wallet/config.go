@@ -11,5 +11,6 @@ type Config struct {
 	Version       string
 	CacheExpiry   time.Duration
 	SessionExpiry time.Duration
+	StoreTimeout  time.Duration
 	LogLevel      logrus.Level
 }

@@ -19,7 +19,7 @@ func BasicAuth(s api.Service) gin.HandlerFunc {
 			return
 		}
 
-		_, err := s.Auth(c.Param("wallet_id"), username, password)
+		_, err := s.Auth(c.Param("wallet_id"), username, password, false)
 		if err != nil {
 			c.Abort()
 

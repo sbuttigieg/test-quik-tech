@@ -3,33 +3,36 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
-	"github.com/shopspring/decimal"
 )
 
-func (s *service) Debit(walletID string, amount decimal.Decimal) (*decimal.Decimal, error) {
+func (s *service) Debit(walletID string, description string, amount decimal.Decimal) (*models.Transaction, error) {
 	if amount.LessThan(decimal.Zero) {
 		return nil, errors.New("negative value")
 	}
 
-	var player models.Player
+	var player *models.Player
 
-	u, ok := s.cache.GetKeyBytes(walletID)
+	p, ok := s.cache.GetKeyBytes(walletID)
 	if !ok {
-		fmt.Println("service debit", ok)
-		// get from store
-		// if not found => error "player not found"
-		// if found store to cache
-		// set player to store player
+		return nil, errors.New("player not found")
 	}
 
-	if ok {
-		err := json.Unmarshal(u, &player)
-		if err != nil {
-			return nil, err
-		}
+	err := json.Unmarshal(p, &player)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if player is active
+	elapsed := time.Since(player.LastActivity)
+
+	if elapsed >= s.config.SessionExpiry {
+		return nil, errors.New("player not logged in")
 	}
 
 	res := player.Balance.Sub(amount)
@@ -37,14 +40,29 @@ func (s *service) Debit(walletID string, amount decimal.Decimal) (*decimal.Decim
 		return nil, errors.New("insufficient funds")
 	}
 
-	player.Balance = res
-
-	// Replace with store update (balance, last activity) that also includes cache update
-	err := s.cache.SetKey(walletID, player, s.config.CacheExpiry)
+	balance, err := s.store.UpdatePlayerBalance(walletID, res)
 	if err != nil {
 		return nil, err
 	}
-	// *********************
 
-	return &player.Balance, nil
+	player.Balance = *balance
+
+	// Can be done as store middleware
+	err = s.cache.SetKey(walletID, player, s.config.CacheExpiry)
+	if err != nil {
+		return nil, err
+	}
+
+	transaction, err := s.store.NewTransaction(models.Transaction{
+		TransactionID: uuid.New().String(),
+		WalletID:      walletID,
+		Amount:        amount,
+		Type:          description,
+		Balance:       player.Balance,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return transaction, nil
 }

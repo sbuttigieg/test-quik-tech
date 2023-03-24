@@ -16,3 +16,6 @@
 
 # App binary
 bin/
+
+# Unused code snippets
+zarchive/

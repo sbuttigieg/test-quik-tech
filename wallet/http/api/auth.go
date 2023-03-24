@@ -22,7 +22,7 @@ func (h *Handler) Auth(c *gin.Context) {
 		return
 	}
 
-	player, err := h.service.Auth(c.Param("wallet_id"), req.Username, req.Password)
+	player, err := h.service.Auth(c.Param("wallet_id"), req.Username, req.Password, true)
 	if err != nil {
 		c.Abort()
 

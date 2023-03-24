@@ -2,25 +2,42 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"time"
+
+	"github.com/shopspring/decimal"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
-	"github.com/shopspring/decimal"
 )
 
 func (s *service) Balance(walletID string) (*decimal.Decimal, error) {
-	var player models.Player
+	var player *models.Player
 
-	u, ok := s.cache.GetKeyBytes(walletID)
+	p, ok := s.cache.GetKeyBytes(walletID)
 	if !ok {
-		fmt.Println("service balance", ok)
-		// get from store
-		// if not found => error "player not found"
-		// if found store to cache
-		// return store balance, nil
+		return nil, errors.New("player not found")
 	}
 
-	err := json.Unmarshal(u, &player)
+	err := json.Unmarshal(p, &player)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if player is active
+	elapsed := time.Since(player.LastActivity)
+
+	if elapsed >= s.config.SessionExpiry {
+		return nil, errors.New("player not logged in")
+	}
+
+	// Update last activity
+	player, err = s.store.ActivePlayer(walletID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Can be done as store middleware
+	err = s.cache.SetKey(walletID, player, s.config.CacheExpiry)
 	if err != nil {
 		return nil, err
 	}

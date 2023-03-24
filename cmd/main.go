@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -10,14 +9,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 
 	"github.com/sbuttigieg/test-quik-tech/cmd/config"
 	"github.com/sbuttigieg/test-quik-tech/cmd/config/connections"
 	"github.com/sbuttigieg/test-quik-tech/cmd/config/store"
 	"github.com/sbuttigieg/test-quik-tech/cmd/config/wallet/api"
 	"github.com/sbuttigieg/test-quik-tech/wallet/http/api/middleware"
-	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
 func main() {
@@ -49,86 +46,25 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	dbConnection, err := connections.NewMySQL(c, log)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	defer dbConnection.Close()
+
+	// store setup
+	err = store.DBInit(dbConnection)
+	if err != nil {
+		log.Error("Database Initiation Error: ", err)
+	}
+
 	// redis setup
 	cache := store.NewCache(c, redisConnection)
 
-	Player1 := models.Player{
-		WalletID:     "6cc4ee0d-9919-4857-a70d-9b7283957e16",
-		Balance:      decimal.NewFromInt(100),
-		Username:     "Bob",
-		Password:     "123456",
-		LastActivity: time.Now(),
-	}
-
-	Player2 := models.Player{
-		WalletID:     "0924f01f-3f70-4fe4-ac82-dce4b30e2a7f",
-		Balance:      decimal.NewFromInt(100),
-		Username:     "Joe",
-		Password:     "654321",
-		LastActivity: time.Now(),
-	}
-
-	Player3 := models.Player{
-		WalletID:     "d2ba410a-9bc4-476b-86af-c55525b527df",
-		Balance:      decimal.NewFromInt(100),
-		Username:     "Dave",
-		Password:     "456789",
-		LastActivity: time.Now(),
-	}
-
-	err = cache.SetKey(Player1.WalletID, Player1, c.CacheExpiry)
-	if err != nil {
-		fmt.Println("SetKey", err)
-	}
-
-	err = cache.SetKey(Player2.WalletID, Player2, c.CacheExpiry)
-	if err != nil {
-		fmt.Println("SetKey", err)
-	}
-
-	err = cache.SetKey(Player3.WalletID, Player3, c.CacheExpiry)
-	if err != nil {
-		fmt.Println("SetKey", err)
-	}
-
-	u1, ok := cache.GetKeyBytes(Player1.WalletID)
-	if !ok {
-		fmt.Println("GetKey Player1", ok)
-	}
-
-	u2, ok := cache.GetKeyBytes(Player2.WalletID)
-	if !ok {
-		fmt.Println("GetKey Player1", ok)
-	}
-
-	u3, ok := cache.GetKeyBytes(Player3.WalletID)
-	if !ok {
-		fmt.Println("GetKey Player1", ok)
-	}
-
-	var d1, d2, d3 models.Player
-
-	err = json.Unmarshal(u1, &d1)
-	if err != nil {
-		fmt.Println("Unmarshal d1", err)
-	}
-
-	err = json.Unmarshal(u2, &d2)
-	if err != nil {
-		fmt.Println("Unmarshal d2", err)
-	}
-
-	err = json.Unmarshal(u3, &d3)
-	if err != nil {
-		fmt.Println("Unmarshal d3", err)
-	}
-
-	fmt.Println("Player1 ==>", d1)
-	fmt.Println("Player2 ==>", d2)
-	fmt.Println("Player3 ==>", d3)
-
 	// api setup
-	apiService := api.NewService(c, cache, log, uuid.New, time.Now)
+	apiStore := api.NewStore(dbConnection)
+	apiService := api.NewService(c, cache, apiStore, log, uuid.New, time.Now)
 	apiHandlers := api.NewHandlers(apiService)
 
 	// Comment for debug mode. Uncomment for production
