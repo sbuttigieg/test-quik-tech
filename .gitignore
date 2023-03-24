@@ -19,3 +19,6 @@ bin/
 
 # Unused code snippets
 zarchive/
+
+#mac files
+.DS_Store

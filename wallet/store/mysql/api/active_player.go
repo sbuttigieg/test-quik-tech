@@ -1,16 +1,15 @@
 package api
 
 import (
-	"context"
 	"time"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
 )
 
 func (s *store) ActivePlayer(walletID string) (*models.Player, error) {
-	_, err := s.db.ExecContext(context.Background(), "UPDATE players SET last_activity = ? WHERE wallet_id = ?", time.Now(), walletID)
-	if err != nil {
-		return nil, err
+	result := s.db.Model(&models.Player{}).Where("wallet_id = ?", walletID).Update("last_activity", time.Now())
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	player, err := s.GetPlayer(walletID)

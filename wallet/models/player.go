@@ -7,9 +7,9 @@ import (
 )
 
 type Player struct {
-	WalletID     string          `json:"wallet_id" gorm:"primaryKey"`
-	Balance      decimal.Decimal `json:"balance"`
-	Username     string          `json:"username"`
-	Password     string          `json:"password"`
-	LastActivity time.Time       `json:"last_activity"`
+	WalletID     string          `json:"wallet_id" gorm:"type:varchar(50);primaryKey;not null;unique"`
+	Balance      decimal.Decimal `json:"balance" gorm:"type:decimal(15,10);"`
+	Username     string          `json:"username" gorm:"type:text;"`
+	Password     string          `json:"password" gorm:"type:text;"`
+	LastActivity time.Time       `json:"last_activity" gorm:"type:TIMESTAMP;default:current_timestamp;autoUpdateTime"`
 }

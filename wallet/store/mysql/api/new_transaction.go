@@ -7,27 +7,14 @@ import (
 func (s *store) NewTransaction(transaction models.Transaction) (*models.Transaction, error) {
 	var res models.Transaction
 
-	_, err := s.db.Exec("INSERT INTO transactions (id, wallet_id, amount, type, balance) VALUES ( ?, ?, ?, ?, ? )",
-		transaction.TransactionID,
-		transaction.WalletID,
-		transaction.Amount,
-		transaction.Type,
-		transaction.Balance,
-	)
-	if err != nil {
-		return nil, err
+	result := s.db.Create(&transaction)
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
-	err = s.db.QueryRow("SELECT * FROM transactions WHERE id = ?;", transaction.TransactionID).Scan(
-		&res.TransactionID,
-		&res.WalletID,
-		&res.Amount,
-		&res.Type,
-		&res.Balance,
-		&res.Created,
-	)
-	if err != nil {
-		return nil, err
+	result = s.db.First(&res, "id = ?", transaction.ID)
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return &res, nil

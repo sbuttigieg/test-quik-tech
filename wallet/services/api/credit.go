@@ -49,11 +49,11 @@ func (s *service) Credit(walletID string, description string, amount decimal.Dec
 	}
 
 	transaction, err := s.store.NewTransaction(models.Transaction{
-		TransactionID: uuid.New().String(),
-		WalletID:      walletID,
-		Amount:        amount,
-		Type:          description,
-		Balance:       player.Balance,
+		ID:       uuid.New().String(),
+		WalletID: walletID,
+		Amount:   amount,
+		Type:     description,
+		Balance:  player.Balance,
 	})
 	if err != nil {
 		return nil, err

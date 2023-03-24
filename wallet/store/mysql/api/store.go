@@ -1,12 +1,12 @@
 package api
 
 import (
-	"database/sql"
+	"gorm.io/gorm"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/services/api"
 )
 
-func New(db *sql.DB) api.Store {
+func New(db *gorm.DB) api.Store {
 	s := &store{
 		db:     db,
 		models: "api",
@@ -16,6 +16,6 @@ func New(db *sql.DB) api.Store {
 }
 
 type store struct {
-	db     *sql.DB
+	db     *gorm.DB
 	models string
 }

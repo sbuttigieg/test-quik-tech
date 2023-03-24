@@ -51,8 +51,6 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	defer dbConnection.Close()
-
 	// store setup
 	err = store.DBInit(dbConnection)
 	if err != nil {

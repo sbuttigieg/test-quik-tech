@@ -1,7 +1,6 @@
 package connections
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
 	"time"
@@ -12,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewMySQL(c *wallet.Config, log *logrus.Logger) (*sql.DB, error) {
+func NewMySQL(c *wallet.Config, log *logrus.Logger) (*gorm.DB, error) {
 	dbUser := os.Getenv("MYSQL_USER")
 	dbPwd := os.Getenv("MYSQL_PASSWORD")
 	dbPort := os.Getenv("MYSQL_PORT")
@@ -41,10 +40,5 @@ func NewMySQL(c *wallet.Config, log *logrus.Logger) (*sql.DB, error) {
 		break
 	}
 
-	sqlDB, err := db.DB()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return sqlDB, nil
+	return db, nil
 }

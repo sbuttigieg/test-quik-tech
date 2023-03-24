@@ -7,10 +7,10 @@ import (
 )
 
 type Transaction struct {
-	TransactionID string          `json:"id" gorm:"primaryKey"`
-	WalletID      string          `json:"wallet_id"`
-	Amount        decimal.Decimal `json:"amount"`
-	Type          string          `json:"type"`
-	Balance       decimal.Decimal `json:"balance"`
-	Created       time.Time       `json:"created_at"`
+	ID        string          `json:"id" gorm:"type:varchar(50);primaryKey;not null;unique"`
+	WalletID  string          `json:"wallet_id" gorm:"type:text;"`
+	Amount    decimal.Decimal `json:"amount" gorm:"type:decimal(15,10);"`
+	Type      string          `json:"type" gorm:"type:text;"`
+	Balance   decimal.Decimal `json:"balance" gorm:"type:decimal(15,10);"`
+	CreatedAt time.Time       `json:"created_at" gorm:"type:TIMESTAMP;autoUpdateTime"`
 }
