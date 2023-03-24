@@ -13,6 +13,7 @@ func (s *service) Auth(walletID, username, password string, login bool) (*models
 	}
 
 	var player *models.Player
+
 	var err error
 
 	p, ok := s.cache.GetKeyBytes(walletID)

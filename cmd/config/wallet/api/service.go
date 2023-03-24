@@ -5,14 +5,13 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/sbuttigieg/test-quik-tech/wallet"
-	"github.com/sbuttigieg/test-quik-tech/wallet/services/api"
 	service "github.com/sbuttigieg/test-quik-tech/wallet/services/api"
 	"github.com/sbuttigieg/test-quik-tech/wallet/services/api/middleware"
 	"github.com/sbuttigieg/test-quik-tech/wallet/store"
 	"github.com/sirupsen/logrus"
 )
 
-func NewService(cfg *wallet.Config, cache store.Cache, store api.Store, logger *logrus.Logger, uuidFunc func() uuid.UUID, timeFunc func() time.Time) service.Service {
+func NewService(cfg *wallet.Config, cache store.Cache, store service.Store, logger *logrus.Logger, uuidFunc func() uuid.UUID, timeFunc func() time.Time) service.Service {
 	service := service.New(cfg, cache, store, logger, uuidFunc, timeFunc)
 	service = middleware.NewLoggingMiddleware(service, logger)
 

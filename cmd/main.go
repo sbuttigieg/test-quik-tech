@@ -32,10 +32,12 @@ func main() {
 
 	// logger setup
 	logFile := "logs.txt"
+
 	f, err := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
 	defer f.Close()
 
 	log := config.NewLogger(c, f)

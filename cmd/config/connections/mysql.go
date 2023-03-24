@@ -20,7 +20,9 @@ func NewMySQL(c *wallet.Config, log *logrus.Logger) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(db:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPwd, dbPort, dbName)
 
 	var db *gorm.DB
+
 	var dbOK bool
+
 	var err error
 
 	time.Sleep(c.StoreTimeout) // time for mysql to load
@@ -37,6 +39,7 @@ func NewMySQL(c *wallet.Config, log *logrus.Logger) (*gorm.DB, error) {
 		}
 
 		dbOK = true
+
 		break
 	}
 

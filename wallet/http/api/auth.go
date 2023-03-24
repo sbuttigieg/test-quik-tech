@@ -27,11 +27,11 @@ func (h *Handler) Auth(c *gin.Context) {
 		c.Abort()
 
 		switch err.Error() {
-		case "player not found":
+		case PlayerNotFoundError:
 			c.JSON(http.StatusBadRequest, "Player does not exist")
-		case "missing credentials":
+		case MissingCredentialsError:
 			c.JSON(http.StatusBadRequest, "Missing Username and/or Password")
-		case "incorrect credentials":
+		case IncorrectCredentials:
 			c.JSON(http.StatusUnauthorized, "Incorrect Username and/or Password")
 		default:
 			c.JSON(http.StatusInternalServerError, "Error processing player authentication")

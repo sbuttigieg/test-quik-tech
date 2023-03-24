@@ -44,7 +44,6 @@ func (m *loggingMiddleware) Auth(walletID, username, password string, login bool
 		logMsg.Data = fmt.Sprintf("wallet_id: %v, login: %v", player.WalletID, login)
 	default:
 		logMsg.Data = fmt.Sprintf("error: %v", err.Error())
-
 	}
 
 	m.log.Debug(logMsg)
