@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"time"
 
 	"github.com/shopspring/decimal"
 
@@ -24,7 +23,7 @@ func (s *service) Balance(walletID string) (*decimal.Decimal, error) {
 	}
 
 	// Check if player is active
-	elapsed := time.Since(player.LastActivity)
+	elapsed := s.timeFunc().Sub(player.LastActivity)
 
 	if elapsed >= s.config.SessionExpiry {
 		return nil, errors.New("player not logged in")

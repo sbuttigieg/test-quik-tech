@@ -3,9 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"time"
 
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
 	"github.com/sbuttigieg/test-quik-tech/wallet/models"
@@ -29,7 +27,7 @@ func (s *service) Credit(walletID string, description string, amount decimal.Dec
 	}
 
 	// Check if player is active
-	elapsed := time.Since(player.LastActivity)
+	elapsed := s.timeFunc().Sub(player.LastActivity)
 
 	if elapsed >= s.config.SessionExpiry {
 		return nil, errors.New("player not logged in")
@@ -49,7 +47,7 @@ func (s *service) Credit(walletID string, description string, amount decimal.Dec
 	}
 
 	transaction, err := s.store.NewTransaction(models.Transaction{
-		ID:       uuid.New().String(),
+		ID:       s.uuidFunc().String(),
 		WalletID: walletID,
 		Amount:   amount,
 		Type:     description,
