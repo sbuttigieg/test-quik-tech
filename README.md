@@ -16,6 +16,12 @@
 
 `docker-compose down`
 
+## Unit tests
+
+`Unit tests for the service layer can be found in branch feature/unit_tests. They have not been included in the master branch since they were finished after the deadline to complete the task.`
+
+`These tests have a 100% coverage of the service layer and include mocking cache and mysql functions in the store layer.`
+
 ## Functionality
 - Database contains 3 users with the following credentials
 ```
@@ -35,13 +41,11 @@
     "password': "456789"
 }
 ```
-- Before balance, credit and debit endpoints are allowed, the player shall be verified by the auth endpoint. Once verified, the player will be marked as logged in. If player is inactive for more than 5 minutes, he will be logged out and auth will need to be repeated.
+- Before balance, credit and debit endpoints are allowed, the player shall be verified by the auth endpoint. If player is inactive for more than 5 minutes, no transactions will be allowed until auth request is repeated.
 - The username and password are used as Basic Auth for all endpoints except auth.
-- When a balance request is received, it is retrieved from cache. If it is not found in cache, then it will be retrieved from the store.
+- When a balance request is received, it is retrieved from cache. (during authentication the player data is retrieved from cache/store so there is certainty that the balance is in cache)
 - When a debit request is received, if successful the balance of the player will be deducted by the debit amount. The balance is updated in both the store and cache.
 - When a credit request is received, if successful the balance of the player will be increased by the credit amount. The balance is updated in both the store and cache.
-
-
 
 ## Endpoints
 
@@ -86,10 +90,12 @@ requires body in the following format:
 returns response in the following format if successful:
 ```
 {
-    "wallet_id": "some walletID",
+    "id": "some transaction ID",
+    "wallet_id": "some wallet ID",
     "amount": some amount,
-    "transaction_type": "some string",
-    "balance": some amount
+    "type": "some string",
+    "balance": some amount,
+    "created_at": some date
 }
 ```
 
@@ -106,9 +112,11 @@ requires body in the following format:
 returns response in the following format if successful:
 ```
 {
-    "wallet_id": "some walletID",
+    "id": "some transaction ID",
+    "wallet_id": "some wallet ID",
     "amount": some amount,
-    "transaction_type": "some string",
-    "balance": some amount
+    "type": "some string",
+    "balance": some amount,
+    "created_at": some date
 }
 ```
