@@ -1,0 +1,297 @@
+{
+	"info": {
+		"_postman_id": "b5d83c6a-54c2-4adc-b3c4-7dfbd5e6533e",
+		"name": "test-quik-tech",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16045056"
+	},
+	"item": [
+		{
+			"name": "auth Joe",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Joe\",\n    \"password\": \"654321\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/v1/wallets/0924f01f-3f70-4fe4-ac82-dce4b30e2a7f/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"0924f01f-3f70-4fe4-ac82-dce4b30e2a7f",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "balance Joe",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "654321",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Joe",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9001/api/v1/wallets/0924f01f-3f70-4fe4-ac82-dce4b30e2a7f/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"0924f01f-3f70-4fe4-ac82-dce4b30e2a7f",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "credit Joe",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "654321",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Joe",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 12.1223344,\n    \"description\": \"payout\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/v1/wallets/0924f01f-3f70-4fe4-ac82-dce4b30e2a7f/credit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"0924f01f-3f70-4fe4-ac82-dce4b30e2a7f",
+						"credit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "debit Joe",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "654321",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Joe",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 12.33334,\n    \"description\": \"wager\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/v1/wallets/0924f01f-3f70-4fe4-ac82-dce4b30e2a7f/debit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"0924f01f-3f70-4fe4-ac82-dce4b30e2a7f",
+						"debit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "balance Bob",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "Bob",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9001/api/v1/wallets/6cc4ee0d-9919-4857-a70d-9b7283957e16/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"6cc4ee0d-9919-4857-a70d-9b7283957e16",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth Dave",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Dave\",\n    \"password\": \"456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/v1/wallets/d2ba410a-9bc4-476b-86af-c55525b527df/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"d2ba410a-9bc4-476b-86af-c55525b527df",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "debit Dave",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "456789",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Dave",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 40,\n    \"description\": \"wager\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/v1/wallets/d2ba410a-9bc4-476b-86af-c55525b527df/debit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"d2ba410a-9bc4-476b-86af-c55525b527df",
+						"debit"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
