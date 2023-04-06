@@ -1,0 +1,61 @@
+run:
+  tests: false
+linters:
+  enable-all: true
+  disable:
+    # complexity
+    - cyclop
+    - gocyclo
+    - funlen
+    - gocognit
+    - maintidx
+    - nestif
+    - dupl
+    # maybe add
+    - gochecknoglobals 
+    - lll
+    - godot
+    # not apply
+    - paralleltest
+    - tagliatelle
+    - ireturn
+    - ifshort
+    - varnamelen
+    - wrapcheck
+    - nilnil
+    - exhaustruct
+    - gci
+    - interfacebloat
+    - exhaustive
+    # deprecated
+    - scopelint
+    - exhaustivestruct
+    - interfacer
+    - maligned
+    - golint
+    - nosnakecase
+    - structcheck
+    - varcheck
+    - deadcode
+linters-settings:
+  maligned:
+    suggest-new: true
+  misspell:
+    locale: US
+  goerr113:
+    ignore-tests: true
+  wrapcheck:
+    ignoreSigs:
+      - errors.Wrap
+      - errors.Wrapf
+      - errors.WrapCode
+      - errors.Internal
+      - errors.InternalWrap
+      - errors.BadRequest
+      - errors.BadRequestWrap
+      - errors.NotFound
+      - errors.NotFoundWrap
+      - errors.Unauthorized
+      - errors.UnauthorizedWrap
+      - errors.MethodNotAllowed
+      - errors.MethodNotAllowedWrap
